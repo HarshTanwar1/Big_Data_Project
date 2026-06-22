@@ -32,7 +32,7 @@ The repo ships **two complete experiments**:
 
 <br>
 
-## ✨ Highlights
+## ✨ Key Highlights
 
 - ⚡ **Custom real-time streaming engine** — a from-scratch WebSocket server/client pipeline with per-row acknowledgements for back-pressure.
 - 🔄 **Online / incremental learning** — trains per chunk and folds each new model into a running ensemble instead of retraining from scratch.
@@ -41,25 +41,6 @@ The repo ships **two complete experiments**:
 - 🗳️ **7-model voting ensemble** — LR · SVM · RF · LDA · KNN · CART · Naive-Bayes, plus standalone **LSTM & GRU** deep-learning models.
 - 🧹 **End-to-end data engineering** — cleans, deduplicates, encodes, and merges 7 heterogeneous datasets into one trainable source.
 - 📊 **Live metrics & visualization** — per-chunk accuracy, precision, recall, F1 and training time, tracked and plotted with Plotly.
-
-<br>
-
-## 🏗️ Architecture
-
-```
-┌──────────────┐   row-by-row stream    ┌─────────────────────────────────────┐
-│              │  ws://localhost:8765   │              CLIENT                 │
-│    SERVER    │ ─────────────────────► │  ┌────────────┐   ┌───────────────┐ │
-│ server.ipynb │ ◄───── ack ("1") ───── │  │  Chunk     │──►│  Ensemble     │ │
-│ (streams CSV)│                        │  │  Buffer    │   │  (Voting +    │ │
-│              │                        │  │ (adaptive) │   │   incremental)│ │
-└──────────────┘                        │  └────────────┘   └───────┬───────┘ │
-                                        │                           │         │
-                                        │              metrics ◄────┘         │
-                                        │         accuracy · F1 · recall ·    │
-                                        │            precision · time         │
-                                        └─────────────────────────────────────┘
-```
 
 <br>
 
@@ -78,13 +59,13 @@ The repo ships **two complete experiments**:
 
 <br>
 
-## ⚙️ Key Features in Detail
+## ⚙️ Features & Functionality
 
 - **Streaming server** ([`server.ipynb`](IoT_Modbus/server/server.ipynb)) — reads a CSV and streams it one row at a time over `ws://localhost:8765` with a configurable delay, waiting for an acknowledgement after every row.
 - **Incremental client** ([`client.ipynb`](IoT_Modbus/client/client.ipynb)) — buffers rows into chunks, trains an ensemble per chunk, and merges each new chunk's model into the running ensemble (online learning).
 - **Adaptive chunking** — starts at `INITIAL_CHUNK_SIZE`, switches to `FINAL_CHUNK_SIZE`, and grows by `CHUNK_SIZE_INCREMENT_FACTOR` when a chunk can't be trained.
 - **Multithreaded variant** ([`client_multithread.ipynb`](IoT_Modbus/client/client_multithread.ipynb)) — uses a background thread + `threading.Event` so receiving and training run concurrently.
-- **Heterogeneous data pipeline** — [`data_preprocessing.ipynb`](All_IoT_Devices_Combined/data_preparation/data_preprocessing.ipynb) cleans each device dataset (drops NaNs, groups duplicates by mode); [`data_merging.ipynb`](All_IoT_Devices_Combined/data_preparation/data_merging.ipynb) merges all devices.
+- **Heterogeneous data pipeline** — [`data_preprocessing.ipynb`](All_IoT_Devices_Combined/data_preparation/data_preprocessing.ipynb) cleans each device dataset (drops NaNs, groups duplicates by mode) and [`data_merging.ipynb`](All_IoT_Devices_Combined/data_preparation/data_merging.ipynb) merges all devices.
 - **Run logging** — `stream.log` (streaming events) and `ensemble.log` (training events) capture each run.
 
 <br>
@@ -99,22 +80,19 @@ pip install pandas numpy scikit-learn tensorflow websockets plotly matplotlib ju
 
 **2. Prepare data & train the base models**
 
-1. Place your IoT CSV in the `data/` folder (a `Test_*` CSV is a trimmed copy for quick streaming demos).
-2. Encode string columns to numeric with `LabelEncoder` in each `models/notebooks/*` notebook and in `client.ipynb`.
-3. For LR & SVM, set the `iloc` upper limit to the row where the second class label first appears.
-4. Run every notebook in `models/notebooks/` to train and pickle the individual models into `models/h5s/`.
+- Place your IoT CSV in the `data/` folder (a `Test_*` CSV is a trimmed copy for quick streaming demos).
+- Encode string columns to numeric with `LabelEncoder` in each `models/notebooks/*` notebook and in `client.ipynb`.
+- For LR & SVM, set the `iloc` upper limit to the row where the second class label first appears.
+- Run every notebook in `models/notebooks/` to train and pickle the individual models into `models/h5s/`.
 
 **3. Run the stream**
 
-```text
-▶ Run  server/server.ipynb   →  starts streaming on ws://localhost:8765
-▶ Run  client/client.ipynb   →  connects, chunks, and trains incrementally
-                               (or client/client_multithread.ipynb)
-```
+- Run  server/server.ipynb   →  starts streaming on ws://localhost:8765
+- Run  client/client.ipynb   →  connects, chunks, and trains incrementally (or [`client/client_multithread.ipynb`](IoT_Modbus/client/client_multithread.ipynb))
 
 Watch `client/stream.log` & `client/ensemble.log`, then open `client/Graphs.ipynb` to visualize per-chunk metrics.
 
-> For the combined experiment, first run `data_preparation/data_preprocessing.ipynb` → `data_preparation/data_merging.ipynb`
+> For the combined experiment, first run [`data_preprocessing.ipynb`](All_IoT_Devices_Combined/data_preparation/data_preprocessing.ipynb) → [`data_merging.ipynb`](All_IoT_Devices_Combined/data_preparation/data_merging.ipynb)
 
 <br>
 

@@ -46,7 +46,7 @@ The repo ships **two complete experiments**:
 
 ## 🛠️ Tech Stack
 
-| Category                    | Tools                                                                                |
+| Layer                       | Technologies                                                                         |
 | :-------------------------- | :----------------------------------------------------------------------------------- |
 | **Language / Env**          | Python 3, Jupyter Notebook                                                           |
 | **Streaming & Concurrency** | `websockets`, `asyncio`, `threading`                                                 |

@@ -72,20 +72,20 @@ The repo ships **two complete experiments**:
 
 ## 🚀 Getting Started
 
-**1. Install dependencies**
+### 1. Install dependencies
 
 ```bash
 pip install pandas numpy scikit-learn tensorflow websockets plotly matplotlib jupyter
 ```
 
-**2. Prepare data & train the base models**
+### 2. Prepare data & train the base models
 
 - Place your IoT CSV in the `data/` folder (a `Test_*` CSV is a trimmed copy for quick streaming demos).
 - Encode string columns to numeric with `LabelEncoder` in each `models/notebooks/*` notebook and in `client.ipynb`.
 - For LR & SVM, set the `iloc` upper limit to the row where the second class label first appears.
 - Run every notebook in `models/notebooks/` to train and pickle the individual models into `models/h5s/`.
 
-**3. Run the stream**
+### 3. Run the stream
 
 - Run  server/server.ipynb   →  starts streaming on ws://localhost:8765
 - Run  client/client.ipynb   →  connects, chunks, and trains incrementally (or [`client/client_multithread.ipynb`](IoT_Modbus/client/client_multithread.ipynb))

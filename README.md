@@ -81,7 +81,7 @@ pip install pandas numpy scikit-learn tensorflow websockets plotly matplotlib ju
 ### 2. Prepare data & train the base models
 
 - Place your IoT CSV in the `data/` folder (a `Test_*` CSV is a trimmed copy for quick streaming demos).
-- Encode string columns to numeric with `LabelEncoder` in each `models/notebooks/*` notebook and in `client.ipynb`.
+- Encode string columns to numeric with `LabelEncoder` in each `models/notebooks/*` notebook and in [`client.ipynb`](IoT_Modbus/client/client.ipynb).
 - For LR & SVM, set the `iloc` upper limit to the row where the second class label first appears.
 - Run every notebook in `models/notebooks/` to train and pickle the individual models into `models/h5s/`.
 
@@ -109,8 +109,8 @@ Watch `client/stream.log` & `client/ensemble.log`, then open `client/Graphs.ipyn
 
 ## 🔭 Future Improvements
 
-- **Production streaming stack** — swap the hand-rolled server for **Apache Kafka / Spark Streaming** (fault tolerance, partitioning, horizontal scaling).
-- **True incremental learners** — adopt `partial_fit` models (`SGDClassifier`, `river`) and add **concept-drift detection**.
+- **Production streaming stack** — swap the hand-rolled server for Apache Kafka / Spark Streaming (fault tolerance, partitioning, horizontal scaling).
+- **True incremental learners** — adopt `partial_fit` models (`SGDClassifier`, `river`) and add concept-drift detection.
 - **Productionize** — extract logic from notebooks into reusable modules with a CLI, config files, and unit tests.
 - **Stronger evaluation** — handle class imbalance with stratified sampling, weighted metrics, and confusion matrices.
 
